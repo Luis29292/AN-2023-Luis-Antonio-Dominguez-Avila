@@ -1,0 +1,388 @@
+---
+title: "Tarea 1. Gráficas de funciones."
+author: "Análisis Numérico. Luis Antonio Domínguez Ávila"
+date: "Enero del 2023"
+output: 
+  prettydoc::html_pretty:
+    toc: true
+    theme: architect
+header-includes:
+   - \usepackage{amsmath}
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(plotly)
+library(ggh4x)
+#library(pracma)
+#library(polynom)
+#library(matlib)
+```
+
+
+
+
+Realiza la gráfica de las siguientes funciones en el intervalo adecuado.
+
+a) $f(x)=e^x-3x^2$.
+
+
+
+```{r}
+f_a <- function(x){exp(x)-3*x^2}
+
+x_a <- seq(0, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Primera gráfica")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Primera gráfica")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+
+
+
+
+b)$f(x)=\frac{2x^2-8}{x+2}$
+```{r}
+f_a <- function(x){(2*x^2-8)/(x+2)}
+
+x_a <- seq(-5, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica b)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica b)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+c)$f(x)=\frac{x+1}{x+2}$
+```{r}
+f_a <- function(x){(x+1)/(x+2)}
+
+x_a <- seq(0, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica c)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica c)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+d) $f(x)=3x+1$
+```{r}
+f_a <- function(x){3*x+1}
+
+x_a <- seq(-5, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica d)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica d)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+e) $f(x)=x^4-x^3+x^2-x+1$. 
+```{r}
+f_a <- function(x){x^4-x^3+x^2-x+1}
+
+x_a <- seq(0, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica e)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica e)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+f) $f(x)=x\,cos\,x-3x$.  
+```{r}
+f_a <- function(x){x*cos(x)-3*x}
+
+x_a <- seq(-5, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica f)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica f)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+g) $f(x)=e^{2x}$.
+```{r}
+f_a <- function(x){exp(2*x)}
+
+x_a <- seq(0, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica g)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica g)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+h) $f(x)=log(e^x+2)$.  
+```{r}
+f_a <- function(x){log(exp(x)+2)}
+
+x_a <- seq(-5, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica h)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+#{r echo=FALSE}
+graf_h <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica h)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+i) $f(x) = cos \,x+sen\,x$.
+```{r}
+f_a <- function(x){cos(x)+sin(x)}
+
+x_a <- seq(0, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Gráfica i)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Gráfica i)")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+j) $f(x)=sen(e^x-2)$.
+```{r}
+f_a <- function(x){sin(exp(x)-2)}
+
+x_a <- seq(0, 5, by=0.0001)
+y_a <- f_a(x_a)
+
+graf_a <- ggplot()+
+  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  labs(x="x", y="f(x)", title="Última gráfica")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+Otra opción
+
+```{r}
+graf_a <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  geom_function(fun=f_a, color="red", linewidth=1)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+  xlim(-0.5, 5)+
+  labs(x="x", y="f(x)", title="Última gráfica")+
+  theme_bw()
+
+
+ggplotly(graf_a)
+```
+
+
+

@@ -1,0 +1,11 @@
+f <- function(x){x^3+4*x^2-10}
+pm <- 1+(2-1)/2
+f(1)
+f(1.5)
+
+pm <- 1.25+(1.5-1.25)/2
+f(1)#Negativo
+f(1.25)
+f(1.375)#Positivo
+f(1.5)#Positivo
+metodo_biseccion(f,1,2,0.000000000001,1000)

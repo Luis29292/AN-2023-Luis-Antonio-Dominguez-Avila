@@ -1,0 +1,160 @@
+---
+title: "Tarea 2. Método de bisección e iteración de punto fijo."
+author: "Análisis Numérico."
+date: "Febrero 2023"
+output: 
+  prettydoc::html_pretty:
+    toc: true
+    theme: cayman
+header-includes:
+   - \usepackage{amsmath}
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+```
+
+
+```{r echo=FALSE}
+metodo_biseccion <- function(f_x, a,b,tol, N){
+  cond <-  1
+  it <- 0
+  A <- a
+  B <- b
+  p <- 0
+  while(cond==1){
+    it <- it+1
+    if(it<=N){#if 1
+      p[it] <- A[it]+(B[it]-A[it])/2
+      tol_it <- (B[it]-A[it])/2
+      if( f_x(p[it])==0 | tol_it<tol){#if 2
+        resultados <- list(aprox=p, precision=tol_it, iteraciones=it)
+        return(resultados)
+        cond <- 0
+      }# end if 2
+      else{ #else 2
+        if(f_x(A[it])*f_x(p[it])<0){# if 3
+          A[it+1] <- A[it]
+          B[it+1] <- p[it]
+        } # end if 3
+        else{# else 3
+          A[it+1] <- p[it]
+          B[it+1] <- B[it]
+        }# end else 3
+      } #end else 2
+    }#end if 1
+    else{ # else 1
+      print("Se alcanzó el máximo de iteraciones")
+      cond <- 0
+    } # end else 1
+  }# While
+}#Función
+```
+
+
+
+# Ejercicio 1
+
+Sea $f(x)=\sqrt{x}-\cos x$.  Usa el método de la bisección para encontrar $x\in [0,1]$ tal que $f(x)=0$.
+
+
+# Ejercicio 2
+
+Usa el método de la bisección para encontrar una raíz con una precisión de $10^{-2}$ para $x^3-7x^2+14x-6=0$ en cada intervalo.
+
+\begin{equation}
+a) [0,1]\qquad\qquad b) [1, 3.2]\qquad\qquad c)[3.2, 4]
+\end{equation}
+
+# Ejercicio 3
+
+Usa el metodo de la bisección para encontrar las soluciones con una precisión de $10^{-5}$ para los siguientes problemas.
+
+a) $x-2^{-x}=0$ para $0\leq x\leq 1$
+
+b) $e^x-x^2+3x-2=0$ para $0\leq x\leq 1$
+
+c) $2x\cos (2x)-(x+1)^2=0$ para $-3\leq x\leq -2$ y $-1\leq x \leq 0$
+
+d) $x\cos x-2x^2+3x-1=0$ para $0.2\leq x\leq 0.3$ y $1.2\leq x \leq 1.3$
+
+# Ejercicio 4
+
+Considera las funciones $f(x)=x$ y $g(x)=2 \sin x$.  Usa el método de la bisección para encontrar una aproximación con una precisión de $10^{-5}$ para el primer valor positivo $x$ tal que $f(x)=g(x)$.
+
+
+
+
+# Ejercicio 5
+
+Sea $f(x)=(x+2)(x+1)x(x-1)^3(x-2)$. ¿A cuál raíz de $f$ converge el método de la bisección cuando se aplica a los siguientes intervalos?
+
+\begin{equation}
+a) [-3,2.5]\qquad \qquad b) [-2.5, 3]\qquad\qquad c)[-1.75, 1.5]\qquad\qquad d) [-1.5, 1.75]
+\end{equation}
+
+
+
+
+
+
+# Ejercicio 6
+
+En cada una de las siguientes ecuaciones, determina un intervalo $[a,b]$ en que convergerá la iteración de punto fijo.  Estima la cantidad de iteraciones necesarias para obtener aproximaciones con una exactitud de $10^{-5}$ y realiza los cálculos.
+
+```{r}
+
+it_pf <- function(g, q0, pr=1e-5, N=100){
+  cond <- 1
+  it <- 1
+  q <- q0
+  while(cond==1){
+    if(it<=N){
+      q[it+1] = g(q[it]) # iteración de la función 
+      pr_it <- abs(q[it+1]-q[it]) # precisión en la iteración 
+       if(pr_it<pr){
+          resultados <- list(sucesion=q, precision=pr_it, iteraciones=it)
+          return(resultados)
+          cond <- 0
+          }#final del segundo if
+        else{it <- it+1}
+    }#final del primer if
+    else{
+      print("Se alcanzo el maximo de iteraciones")
+      cond <- 0
+    }#fin del else
+  }#final del while
+}# final de la función
+
+```
+
+
+a. $\quad x=\frac{2-e^{x}+x^{2}}{3}$
+
+b. $\quad x=\frac{5}{x^{2}}+2$
+
+c. $\quad x=\left(e^{x} / 3\right)^{1 / 2}$
+
+d. $\quad x=5^{-x}$
+
+e. $\quad x=6^{-x}$
+
+f. $\quad x=0.5(\sin x+\cos x)$
+
+
+
