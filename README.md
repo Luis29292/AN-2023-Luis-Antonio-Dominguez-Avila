@@ -1,2 +1,1 @@
-# Análisis Numérico
-## Domínguez Ávila Luis Antonio
+# AN-2023 LUIS ANTONIO DOMÍNGUEZ ÁVILA
