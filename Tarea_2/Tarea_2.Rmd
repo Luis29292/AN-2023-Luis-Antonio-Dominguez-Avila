@@ -66,6 +66,26 @@ metodo_biseccion <- function(f_x, a,b,tol, N){
 }#Función
 ```
 
+```{r}
+grafica <- function(f,i,d,t){
+  #f_a <- function(x){sqrt(x)-cos(x)}
+
+  x <- seq(i, d, by=0.0001)
+  y <- f(x)
+  
+  graf_a <- ggplot()+
+    geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+    geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+    geom_line(aes(x=x, y=y), color="red", linewidth=1)+
+    #coord_fixed(ratio = 1)+ # misma escala en los ejes
+    labs(x="x", y="f(x)", title=t)+
+    theme_bw()
+  
+  
+  ggplotly(graf_a)
+}
+
+```
 
 
 # Ejercicio 1
@@ -73,21 +93,8 @@ metodo_biseccion <- function(f_x, a,b,tol, N){
 Sea $f(x)=\sqrt{x}-\cos x$.  Usa el método de la bisección para encontrar $x\in [0,1]$ tal que $f(x)=0$.
 
 ```{r}
-f_a <- function(x){sqrt(x)-cos(x)}
-
-x_a <- seq(0, 1.5, by=0.0001)
-y_a <- f_a(x_a)
-
-graf_a <- ggplot()+
-  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
-  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
-  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
-  #coord_fixed(ratio = 1)+ # misma escala en los ejes
-  labs(x="x", y="f(x)", title="Primera gráfica")+
-  theme_bw()
-
-
-ggplotly(graf_a)
+f <- function(x){sqrt(x)-cos(x)}
+grafica(f,0,1.5,"Primera gráfica")
 ```
 Otra opción
 
@@ -95,7 +102,7 @@ Otra opción
 graf_a <- ggplot()+
   #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
   #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
-  geom_function(fun=f_a, color="red", linewidth=1, n=200)+
+  geom_function(fun=f, color="red", linewidth=1, n=200)+
   #coord_fixed(ratio = 1)+ # misma escala en los ejes
   xlim(0, 1.5)+
   labs(x="x", y="f(x)", title="Primera gráfica")+
@@ -106,12 +113,12 @@ ggplotly(graf_a)
 ```
 Utilizando la función desarrollada en clase
 ```{r}
-metodo_biseccion(f_a,0,1,1e-10,N=500)
+metodo_biseccion(f,0,1,1e-10,N=500)
 ```
 La raíz es 0.6417144 
 Utiliando la función de pracma:
 ```{r}
-bisect(f_a,0,1,500)
+bisect(f,0,1,500)
 ```
 
 
@@ -123,61 +130,76 @@ Usa el método de la bisección para encontrar una raíz con una precisión de $
 a) [0,1]\qquad\qquad b) [1, 3.2]\qquad\qquad c)[3.2, 4]
 \end{equation}
 
+```{r}
+f <- function(x){x^3-7*x^2+14*x-6}
+grafica(f,-1,5,"Segunda gráfica")
+```
+```{r}
+bisect(f,0,1,500)
+```
+Entre 0 y 1, la raíz es de 0.5857864
+```{r}
+bisect(f,1,3.2,500)
+```
+Entre 1 y 3.2, la raíz es de 3
+```{r}
+bisect(f,3.2,4,500)
+```
+Entre 3.2 y 4, la raíz es de 3.414214
+
 # Ejercicio 3
 
 Usa el metodo de la bisección para encontrar las soluciones con una precisión de $10^{-5}$ para los siguientes problemas.
 
 a) $x-2^{-x}=0$ para $0\leq x\leq 1$
+```{r}
+f <- function(x){x-2^(-x)}
+grafica(f,-1,2,"Gráfica 3.a)")
+```
+```{r}
+bisect(f,0,1,500)
+```
+La raíz está en 0.6411857
 
 b) $e^x-x^2+3x-2=0$ para $0\leq x\leq 1$
 ```{r}
-f_a <- function(x){exp(x)-x^2+3*x-2}
+f <- function(x){exp(x)-x^2+3*x-2}
 
-x_a <- seq(-5, 5, by=0.0001)
-y_a <- f_a(x_a)
-
-graf_a <- ggplot()+
-  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
-  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
-  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
-  #coord_fixed(ratio = 1)+ # misma escala en los ejes
-  labs(x="x", y="f(x)", title="Primera gráfica")+
-  theme_bw()
-
-
-ggplotly(graf_a)
+grafica(f,-1,1,"Gráfica 3.b)")
 ```
 
 ```{r}
-bisect(f_a,-5,5,500)
+bisect(f,0,1,500)
 ```
 La raíz está en 0.2575303
+
 c) $2x\cos (2x)-(x+1)^2=0$ para $-3\leq x\leq -2$ y $-1\leq x \leq 0$
+```{r}
+f <- function(x){2*x*cos(2*x)-(x+1)^2}
+grafica(f,-4,1,"Gráfica 3.c)")
+```
+```{r}
+bisect(f,-3,-2,500)
+```
+La raíz entre -3 y -2 es de -2.191308
+```{r}
+bisect(f,-1,0,500)
+```
+La raíz entre -1 y 0 es de -0.79816
 
 d) $x\cos x-2x^2+3x-1=0$ para $0.2\leq x\leq 0.3$ y $1.2\leq x \leq 1.3$
 ```{r}
-f_a <- function(x){x*cos(x)-2*x^2+3*x-1}
-
-x_a <- seq(-1, 2.5, by=0.0001)
-y_a <- f_a(x_a)
-
-graf_a <- ggplot()+
-  geom_vline(xintercept = 0, linetype="dashed")+ #eje x
-  geom_hline(yintercept = 0, linetype="dashed")+ #eje y
-  geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
-  #coord_fixed(ratio = 1)+ # misma escala en los ejes
-  labs(x="x", y="f(x)", title="Primera gráfica")+
-  theme_bw()
-
-
-ggplotly(graf_a)
+f <- function(x){x*cos(x)-2*x^2+3*x-1}
+grafica(f,0.1,1.4,"Gráfica 3.d)")
 ```
 ```{r}
-bisect(f_a,-1,1,500)
+bisect(f,0.2,0.3,500)
 ```
+La raíz entre 0.2 y 0.3 es de 0.2975302
 ```{r}
-bisect(f_a,1,2,500)
+bisect(f,1.2,1.3,500)
 ```
+La raíz entre 1.2 y 1.3 es de 1.256623
 
 # Ejercicio 4
 
