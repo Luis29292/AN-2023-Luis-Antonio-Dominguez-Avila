@@ -91,7 +91,7 @@ grafica <- function(f,i,d,t,color="red"){
 graficas <- function(g,i,d,t){
 f <- function(x){x}
 #g <- function(x){(2-exp(x)+x^2)/3}
-h <- function(x){g(x)-f(x)}
+h <<- function(x){g(x)-f(x)}
 
 graf <- ggplot()+
   #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
@@ -105,8 +105,8 @@ graf <- ggplot()+
   labs(x="x", y="f(x)", title=t)+
   theme_bw()
 
-
 ggplotly(graf)
+
 }
 ```
 
@@ -231,7 +231,6 @@ Considera las funciones $f(x)=x$ y $g(x)=2 \sin x$.  Usa el método de la bisecc
 
 ```{r}
 g <- function(x){2*sin(x)}
-h <- function(x){2*sin(x)-x}
 graficas(g,-5,5,"Gráfica 4")
 ```
 ```{r}
@@ -316,27 +315,21 @@ bisect(h,0,1)
 ```
 
 b. $\quad x=\frac{5}{x^{2}}+2$
+```{r}
+g <- function(x){5/(x^2)+2}
+graficas(g,-3,3,"6.b)")
+```
+```{r}
+it_pf(g,0,pr=1e-10)
+```
+```{r}
+bisect(h,2,3)
+```
 
 c. $\quad x=\left(e^{x} / 3\right)^{1 / 2}$
 ```{r}
-f <- function(x){x}
 g <- function(x){sqrt(exp(x)/3)}
-h <- function(x){g(x)-f(x)}
-
-graf <- ggplot()+
-  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
-  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
-  #geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
-  geom_function(fun=f,color="red",linewidth=0.75,n=200)+
-  geom_function(fun=g,color="blue",linewidth=0.75,n=200)+
-  geom_function(fun=h,color="yellow",linewidth=0.75,n=200)+
-  coord_fixed(ratio = 1)+ # misma escala en los ejes
-    xlim(-2,2)+
-  labs(x="x", y="f(x)", title="Primera gráfica")+
-  theme_bw()
-
-
-ggplotly(graf)
+graficas(g,-2,2,"6.c)")
 ```
 ```{r}
 it_pf(g,1,pr=1e-10)
@@ -345,29 +338,33 @@ it_pf(g,1,pr=1e-10)
 bisect(h,0,2)
 ```
 d. $\quad x=5^{-x}$
+```{r}
+g <- function(x){5^(-x)}
+graficas(g,-2,2,"6.d)")
+```
+```{r}
+it_pf(g,1,pr=1e-10)
+```
+```{r}
+bisect(h,0,1)
+```
 
 e. $\quad x=6^{-x}$
+```{r}
+g <- function(x){6^(-x)}
+graficas(g,-2,2,"6.e)")
+```
+```{r}
+it_pf(g,0.5,pr=1e-10)
+```
+```{r}
+bisect(h,-1,1)
+```
 
 f. $\quad x=0.5(\sin x+\cos x)$
 ```{r}
-f <- function(x){x}
 g <- function(x){0.5*(sin(x)+cos(x))}
-h <- function(x){g(x)-f(x)}
-
-graf <- ggplot()+
-  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
-  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
-  #geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
-  geom_function(fun=f,color="red",linewidth=0.75,n=200)+
-  geom_function(fun=g,color="blue",linewidth=0.75,n=200)+
-  geom_function(fun=h,color="yellow",linewidth=0.75,n=200)+
-  coord_fixed(ratio = 1)+ # misma escala en los ejes
-    xlim(-2,2)+
-  labs(x="x", y="f(x)", title="Primera gráfica")+
-  theme_bw()
-
-
-ggplotly(graf)
+graficas(g,-2,2,"6.f)")
 ```
 ```{r}
 it_pf(g,0.75,pr=1e-10)
