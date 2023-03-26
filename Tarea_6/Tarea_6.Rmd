@@ -1,0 +1,175 @@
+---
+title: "Tarea 6. Diferenciación e integración numérica."
+author: "Análisis Numérico."
+date: "Marzo del 2023"
+output: 
+  prettydoc::html_pretty:
+    toc: true
+    theme: architect
+header-includes:
+   - \usepackage{amsmath}
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+library(polynom)
+#library(matlib)
+```
+
+
+# Ejercicio 1.
+
+Para cada una de las siguientes funciones realiza la respectiva gráfica en el intervalo dado.  Compara las gráficas de las derivadas aproximadas (con dos tamaños de paso $h\neq 0$ y $h=0$) y la derivada *exacta* en tal intervalo. Realiza la gráfica del error de la derivada cuando $h=0$.
+
+a) $f(x)=e^{2x}-cos (2x)$, $x\in [0,2]$
+
+b) $f(x)=log(x+2)-(x+1)^2$, $x\in [0,5]$
+```{r}
+f <- function(x){
+  log(x+2)-(x+1)^2
+}
+graf_f <- ggplot()+
+  geom_function(fun=f,xlim=c(-.1,5+.1),color="dodgerblue",linewidth=.8)+
+  theme_bw()
+graf_f
+```
+```{r}
+df <- function(x){
+  1/(x+2)-2*(x+1)
+}
+
+x <- seq(0,5,length.out=100)
+
+df_h05 <- fderiv(f,x,n=1,h=0.5,method=c("central"))
+df_h01 <- fderiv(f,x,n=1,h=0.1,method=c("central"))
+df_h0 <- fderiv(f,x,n=1,h=0,method=c("central"))
+
+graf_df <- ggplot()+
+    geom_function(fun=df,xlim=c(0,5),color="firebrick",linewidth=1.2)+
+  geom_line(aes(x,df_h05),color="tomato2",linetype="dashed")+
+  geom_line(aes(x,df_h01),color="gold",linetype="dashed")+
+  geom_line(aes(x,df_h0),color="green",linetype="dashed")+
+  labs(y="Derivadas")+
+    theme_bw()
+ggplotly(graf_df)
+```
+```{r}
+error_derivada <- abs(df(x)-df_h0)
+graf_error <- ggplot()+
+  geom_point(aes(x,error_derivada),color="deeppink",alpha=0.5)+
+  theme_bw()
+graf_error
+```
+
+c) $f(x)=x\, sen\,x+x^2cos\,x$, $x\in [0,\pi]$
+
+d) $f(x)=(cos\,3x)^2-e^{2x}$, $x\in [0,\pi/2]$
+
+```{r}
+f <- function(x){
+  (cos(3*x))^2-exp(2*x)
+}
+graf_f <- ggplot()+
+  geom_function(fun=f,xlim=c(-.1,pi/2+.1),color="dodgerblue",linewidth=.8)+
+  theme_bw()
+graf_f
+```
+```{r}
+df <- function(x){
+  -6*cos(3*x)*sin(3*x)-2*exp(2*x)
+}
+
+x <- seq(0,pi/2,length.out=100)
+
+df_h05 <- fderiv(f,x,n=1,h=0.5,method=c("central"))
+df_h01 <- fderiv(f,x,n=1,h=0.1,method=c("central"))
+df_h0 <- fderiv(f,x,n=1,h=0,method=c("central"))
+
+graf_df <- ggplot()+
+    geom_function(fun=df,xlim=c(0,pi/2),color="firebrick",linewidth=1.2)+
+  geom_line(aes(x,df_h05),color="tomato2",linetype="dashed")+
+  geom_line(aes(x,df_h01),color="gold",linetype="dashed")+
+  geom_line(aes(x,df_h0),color="green",linetype="dashed")+
+  labs(y="Derivadas")+
+    theme_bw()
+ggplotly(graf_df)
+```
+```{r}
+error_derivada <- abs(df(x)-df_h0)
+graf_error <- ggplot()+
+  geom_line(aes(x,error_derivada),color="deeppink")+
+  theme_bw()
+graf_error
+```
+
+
+e) $f(x)=x\,cos\,x-x^2sen\,x$, $x\in [0, 2\pi]$
+
+f) $f(x)=2(log\,x)^2+3\,sen\,x$, $x\in[1,5]$
+
+
+# Ejercicio 2 
+
+Da el valor aproximado (por medio de las funciones `integral` y `cotes`, del package `pracma`) y exacto (en caso de ser posible) de las siguientes integrales (realiza la respectiva gráfica).
+
+a) 
+
+\begin{equation}
+\int_{0.5}^1 x^4 dx
+\end{equation}
+
+
+
+b) 
+
+\begin{equation}
+\int_{0}^{0.5} \frac{2}{x-4} dx
+\end{equation}
+
+
+c) 
+
+\begin{equation}
+\int_{1}^{1.5} x^2\, log(x) dx
+\end{equation}
+
+
+d) 
+
+\begin{equation}
+\int_{0}^{1} x^2 e^{-x}\,dx
+\end{equation}
+
+e)
+
+\begin{equation}
+\int_{1}^{1.6} \frac{2x}{x^2-4} dx
+\end{equation}
+
+f)
+
+\begin{equation}
+\int_{0}^{\pi/4} e^{3x}sin(2x) dx
+\end{equation}
+
+g)
+
+\begin{equation}
+\int_{0}^{\pi/2} ((sen\,x)^2-2x\,sen\,x+1) dx
+\end{equation}
+

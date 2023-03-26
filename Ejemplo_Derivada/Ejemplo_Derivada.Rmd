@@ -1,0 +1,174 @@
+---
+title: "Ejemplo Derivada"
+author: "Análisis Numérico.
+Luis Antonio Domínguez Ávila"
+date: "Marzo 2023"
+output: 
+  prettydoc::html_pretty:
+    toc: true
+    theme: cayman
+header-includes:
+   - \usepackage{amsmath}
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+```
+
+
+```{r echo=FALSE}
+metodo_biseccion <- function(f_x, a,b,tol, N){
+  cond <-  1
+  it <- 0
+  A <- a
+  B <- b
+  p <- 0
+  while(cond==1){
+    it <- it+1
+    if(it<=N){#if 1
+      p[it] <- A[it]+(B[it]-A[it])/2
+      tol_it <- (B[it]-A[it])/2
+      if( f_x(p[it])==0 | tol_it<tol){#if 2
+        resultados <- list(aprox=p, precision=tol_it, iteraciones=it)
+        return(resultados)
+        cond <- 0
+      }# end if 2
+      else{ #else 2
+        if(f_x(A[it])*f_x(p[it])<0){# if 3
+          A[it+1] <- A[it]
+          B[it+1] <- p[it]
+        } # end if 3
+        else{# else 3
+          A[it+1] <- p[it]
+          B[it+1] <- B[it]
+        }# end else 3
+      } #end else 2
+    }#end if 1
+    else{ # else 1
+      print("Se alcanzó el máximo de iteraciones")
+      cond <- 0
+    } # end else 1
+  }# While
+}#Función
+```
+
+```{r}
+grafica <- function(f,i,d,t,color="red"){
+  #f_a <- function(x){sqrt(x)-cos(x)}
+
+  x <- seq(i, d, by=0.0001)
+  y <- f(x)
+  
+  graf_a <- ggplot()+
+    geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+    geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+    geom_line(aes(x=x, y=y), color=color, linewidth=1)+
+    #coord_fixed(ratio = 1)+ # misma escala en los ejes
+    labs(x="x", y="f(x)", title=t)+
+    theme_bw()
+  
+  
+  ggplotly(graf_a)
+}
+
+```
+
+```{r}
+graficas <- function(g,i,d,t){
+f <- function(x){x}
+#g <- function(x){(2-exp(x)+x^2)/3}
+h <<- function(x){g(x)-f(x)}
+
+graf <- ggplot()+
+  #geom_vline(xintercept = 0, linetype="dashed")+ #eje x
+  #geom_hline(yintercept = 0, linetype="dashed")+ #eje y
+  #geom_line(aes(x=x_a, y=y_a), color="red", linewidth=1)+
+  geom_function(fun=f,color="red",linewidth=0.75,n=200)+
+  geom_function(fun=g,color="blue",linewidth=0.75,n=200)+
+  geom_function(fun=h,color="yellow",linewidth=0.75,n=200)+
+  #coord_fixed(ratio = 1)+ # misma escala en los ejes
+    xlim(i,d)+
+  labs(x="x", y="f(x)", title=t)+
+  theme_bw()
+
+ggplotly(graf)
+
+}
+```
+
+
+
+# Ejemplo 1
+
+Consideremos la función $f(x)=e^{2x}-cos(2x)$
+
+```{r}
+f <- function(x){
+  exp(2*x)-cos(2*x)
+}
+
+df <- function(x){
+  2*exp(2*x)+2*sin(2*x)
+}
+
+der_1p <- function(f,x0,h){
+  (f(x0+h)-f(x0))/h
+}
+der_3pe <- function(f,x0,h){
+  (-3*f(x0)+4*f(x0+h)-f(x0+2*h))/(2*h)
+}
+
+der_3pm <- function(f,x0,h){
+  (f(x0+h)-f(x0-h))/(2*h)
+}
+x <- seq(-.5,.5, by=0.25)
+y <- f(x)
+
+tabla_der <- tibble(x=x,y=y)
+
+graf_der <- ggplot()+
+  geom_function(fun=f,xlim=c(-1,1),color="firebrick")+
+  geom_point(data=tabla_der,aes(x,y),color="dodgerblue")+
+  theme_bw()
+ggplotly(graf_der)
+```
+```{r}
+df_h025_1p <- der_1p(f,x,0.25)
+df_h01_1p <- der_1p(f,x,0.1)
+df_h025_1p
+df_h01_1p
+```
+Tres puntos extremos
+
+```{r}
+df_h025_3pe <- der_3pe(f,x,0.25)
+df_h01_3pe <- der_3pe(f,x,0.1)
+df_h025_3pe
+df_h01_3pe
+```
+Tres puntos medio
+
+```{r}
+df_h025_3pm <- der_3pm(f,x,0.25)
+df_h01_3pm <- der_3pm(f,x,0.1)
+df_h025_3pm
+df_h01_3pm
+
+derivada_exacta <- df(x)
+derivada_exacta
+```

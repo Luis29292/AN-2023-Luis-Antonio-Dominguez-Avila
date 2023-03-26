@@ -1,0 +1,110 @@
+---
+title: "Actividad, Análisis Numérico."
+author: "Luis Antonio Domínguez Ávila"
+date: "Marzo del 2023"
+output: 
+  prettydoc::html_pretty:
+    toc: true
+    theme: architect
+header-includes:
+   - \usepackage{amsmath}
+---
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+library(polynom)
+# library(matlib)
+
+
+library(openxlsx)
+library(lubridate)
+
+library(tseries)
+library(forecast)
+library(ggfortify)
+```
+
+
+# Ejercicio 1 
+
+a) Aproxima la menor raíz positiva de $f(x)=x^3-3.23x^2-5.54x+9.84$ por medio de los métodos de bisección y Newton Raphson, compara los resultados.
+
+b) Determina las dos raíces de $f(x)=sen\, x+3\,cos\, x-2$ que pertenecen al intervalo $(-2,2)$, utilizando los métodos de bisección y de Newton Raphson, compara los resultados.
+
+c) El polinomio $f(x)=x^3-1.2x^2-8.19x+13.23$ tiene una raíz de orden dos cercana a $x=2$. Aproxima dicha raíz por medio del método de Newton Raphson.  En este caso ¿por qué no se puede utilizar el método de bisección?
+
+
+
+# Ejercicio 2
+
+Encuentra un punto fijo de la función $f(x)=sen\,x-0.1x+1$.
+
+
+# Ejercicio 3 
+
+Resuelve el siguiente sistema de ecuaciones no lineal:
+
+\begin{eqnarray}
+-2x^3+3y^2+42&=&0\\
+5x^2+3y^3-69&=&0
+\end{eqnarray}
+
+
+
+# Ejercicio 4
+
+Descarga el conjunto de datos de algún indicador económico (https://www.inegi.org.mx/app/tablero/) y realiza la respectiva gráfica. Posteriormente, selecciona un periodo (por ejemplo un año) y ajusta los datos por medio de un polinomio interpolante y por spline cúbico. Comenta los resultados obtenidos. 
+
+```{r}
+balanza <- read.xlsx("Balanza.xlsx") %>% as_tibble()
+balanza$Periodos <- ym(balanza$Periodos)
+graf_balanza <- ggplot(balanza)+
+   geom_line(aes(Periodos, Balanza), color="dodgerblue")+
+   #scale_x_date(breaks="3 years")+
+   theme_bw()
+ ggplotly(graf_balanza)
+ 
+ balanza_ts <- ts(balanza$Balanza, start=c(2010,1),frequency=12)
+ balanza_ts
+ 
+ autoplot(balanza_ts,ts.colour="dodgerblue",ts.linetype="dashed")+
+   theme_bw()
+```
+
+```{r}
+balanza_2020 <- filter(balanza,year(Periodos)==2020)
+balanza_2020 <- mutate(balanza_2020,Mes=month(Periodos))
+
+poli_balanza <- as.function(poly.calc(balanza_2020$Mes,balanza_2020$Balanza))
+
+mes_suce <- seq(1,12,length.out=100)
+poli_balanza_spline <- cubicspline(balanza_2020$Mes,balanza_2020$Balanza,mes_suce)
+tabla_balanza <- tibble(mes=mes_suce, balanza=poli_balanza_spline)
+
+graf_c2020 <- ggplot(balanza_2020)+
+  geom_line(aes(Mes,Balanza),color="firebrick")+
+  geom_point(aes(Mes,Balanza),color="deeppink3",size=2)+
+  geom_function(fun=poli_balanza,color="cyan4",linewidth=0.75)+
+  geom_line(data=tabla_balanza,aes(mes_suce,poli_balanza_spline),color="gold3")
+  theme_bw()
+  
+ggplotly(graf_c2020)
+```
+
+
+
+
