@@ -1,6 +1,7 @@
 ---
 title: "Tarea 4. Interpolación."
-author: "Análisis Numérico."
+author: "Análisis Numérico.
+Luis Antonio Domínguez Ávila"
 date: "Marzo del 2023"
 output: 
   prettydoc::html_pretty:
@@ -136,6 +137,17 @@ graf_muestras <- ggplot(muestras)+
   theme_bw()
 ggplotly(graf_muestras)
 ```
+```{r}
+# Muestra 1
+max_muestra_1 <- optimize(polif_m1, interval = c(0, 28), maximum = TRUE)$maximum
+cat("Peso promedio máximo aproximado de la muestra 1: ", round(max_muestra_1,2), " mg\n")
+
+# Muestra 2
+max_muestra_2 <- optimize(polif_m2, interval = c(0, 28), maximum = TRUE)$maximum
+cat("Peso promedio máximo aproximado de la muestra 2: ", round(max_muestra_2,2), " mg\n")
+
+```
+
 
 
 
