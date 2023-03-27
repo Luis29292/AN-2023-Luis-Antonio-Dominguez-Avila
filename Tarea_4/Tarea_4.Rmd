@@ -144,11 +144,62 @@ ggplotly(graf_muestras)
 # Ejercicio 3
 
 Construye los polinomios interpolantes de Lagrange de grados $n=1,2,3,4$ para las siguientes funciones en el intervalo dado. 
+```{r}
+inter <- function(f,i,d){
+  x1 <- c(i,d)
+  y1 <- f(x1)
+  
+  p1<-as.function(poly.calc(x1,y1))
+  
+  x2<-c(i,d/2,d)
+  y2<-f(x2)
+  p2<-as.function(poly.calc(x2,y2))
+  
+  x3<-c(i,d/3,2*d/3,d)
+  y3<-f(x3)
+  p3<-as.function(poly.calc(x3,y3))
+  
+  x4<-c(i,d/4,2*d/4,3*d/4,d)
+  y4<-f(x4)
+  p4<-as.function(poly.calc(x4,y4))
+  
+  graf_int <- ggplot()+
+    geom_function(fun=f,color="goldenrod1",linewidth=0.8)+
+    geom_function(fun=p1,color="mediumpurple2",linewidth=0.7)+
+    geom_function(fun=p2,color="olivedrab1",linewidth=0.7)+
+    geom_function(fun=p3,color="mediumpurple4",linewidth=0.7)+
+    geom_function(fun=p4,color="yellow4",linewidth=0.7)+
+    geom_point(aes(x4,y4),color="deeppink3",size=2.5)+
+    theme_minimal()
+  ggplotly(graf_int)
+}
+```
 
-a) $f(x) = e^{2x}\, cos 3x$, $[0,2]$. 
+
+a) $f(x) = e^{2x}\, cos 3x$, $[0,2]$.
+```{r}
+f <- function(x){exp(2*x)*cos(3*x)}
+inter(f,0,2)
+```
+
 
 b) $f(x) = sen(log\,x)$, $[1,3]$.
+```{r}
+f <- function(x){sin(log(x))}
+inter(f,1,3)
+```
+
 
 c) $f(x) = e^{x}+e^{-x}$, $[0,2]$. 
+```{r}
+f <- function(x){exp(x)+exp(-x)}
+inter(f,0,2)
+```
+
 
 d) $f(x) = cos \,x+sen\,x$, $[0,2\pi]$.
+```{r}
+f <- function(x){cos(x)+sin(x)}
+inter(f,0,2/pi)
+```
+
