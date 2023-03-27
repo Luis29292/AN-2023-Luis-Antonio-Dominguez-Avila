@@ -118,6 +118,24 @@ b) Para calcular un peso promedio máximo aproximado de cada muestra, determina 
 \end{array}
 \end{equation}
 
+```{r}
+muestras <- tibble(dia=c(0, 6, 10, 13, 17, 20, 28), muestra_1=c(6.67, 17.33, 42.67, 37.33, 30.10, 29.31, 28.74),muestra_2=c(6.67, 16.11, 18.89, 15.00, 10.56, 9.44, 8.89))
+
+poli_m1<-poly.calc(muestras$dia,muestras$muestra_1)
+polif_m1<- as.function(poli_m1)
+
+poli_m2<-poly.calc(muestras$dia,muestras$muestra_2)
+polif_m2<- as.function(poli_m2)
+
+graf_muestras <- ggplot(muestras)+
+  geom_function(fun=polif_m1,color="green3",linewidth=1.2)+
+  geom_function(fun=polif_m2,color="cyan3",linewidth=1.2)+
+  geom_point(aes(x=dia,y=muestra_1),size=2.5,color="firebrick")+
+  geom_point(aes(x=dia,y=muestra_2),size=2.5,color="dodgerblue3")+
+  labs(x="Día",y="Peso(mg)")+
+  theme_bw()
+ggplotly(graf_muestras)
+```
 
 
 
