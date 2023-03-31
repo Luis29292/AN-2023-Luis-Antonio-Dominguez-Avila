@@ -241,6 +241,40 @@ b) Para calcular un peso promedio máximo aproximado de cada muestra, determina 
 \end{array}
 \end{equation}
 
+```{r}
+# Datos de muestra
+dias <- c(0, 6, 10, 13, 17, 20, 28)
+peso_muestra1 <- c(6.67, 17.33, 42.67, 37.33, 30.10, 29.31, 28.74)
+peso_muestra2 <- c(6.67, 16.11, 18.89, 15.00, 10.56, 9.44, 8.89)
+
+# Ajustar splines cúbicos
+spline_muestra1 <- spline(dias, peso_muestra1)
+spline_muestra2 <- spline(dias, peso_muestra2)
+
+# Encontrar el máximo del polinomio interpolante
+maximo_muestra1 <- optimize(splinefun(dias,peso_muestra1), interval = c(0,28), maximum = TRUE)
+maximo_muestra2 <- optimize(splinefun(dias,peso_muestra2), interval = c(0,28), maximum = TRUE)
+
+# Mostrar resultados
+cat("Máximo aproximado de la muestra 1:", maximo_muestra1$maximum,"\n")
+cat("Máximo aproximado de la muestra 2:", maximo_muestra2$maximum,"\n")
+# Crear un data frame con los datos de los splines
+datos_spline <- data.frame(dias = c(spline_muestra1$x,spline_muestra2$x),
+                           peso = c(spline_muestra1$y,spline_muestra2$y),
+                           muestra = rep(c("Muestra 1","Muestra 2"),each=length(spline_muestra1$x)))
+
+# Crear el gráfico con ggplot
+p <- ggplot(datos_spline,aes(x=dias,y=peso,color=muestra)) +
+     geom_line() +
+     labs(title="Peso promedio de las muestras (splines cúbicos)",
+          x="Día",
+          y="Peso promedio (mg)")+
+  theme_bw()
+
+# Convertir el gráfico en interactivo con ggplotly
+ggplotly(p)
+```
+```
 
 # Ejercicio 4
 
