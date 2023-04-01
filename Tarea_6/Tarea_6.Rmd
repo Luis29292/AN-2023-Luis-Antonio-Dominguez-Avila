@@ -35,80 +35,87 @@ library(polynom)
 # Ejercicio 1.
 
 Para cada una de las siguientes funciones realiza la respectiva gráfica en el intervalo dado.  Compara las gráficas de las derivadas aproximadas (con dos tamaños de paso $h\neq 0$ y $h=0$) y la derivada *exacta* en tal intervalo. Realiza la gráfica del error de la derivada cuando $h=0$.
+```{r}
+graf1 <- function(f,i,d){
+  graf_f <- ggplot()+
+    geom_function(fun=f,xlim=c(i-.1,d+.1),color="dodgerblue",linewidth=.8)+
+    theme_bw()
+  graf_f
+}
+```
+
+```{r}
+graf2<-function(f,i,d,df){
+  x <<- seq(i,d,length.out=100)
+  
+  df_h05 <<- fderiv(f,x,n=1,h=0.5,method=c("central"))
+  df_h01 <<- fderiv(f,x,n=1,h=0.1,method=c("central"))
+  df_h0 <<- fderiv(f,x,n=1,h=0,method=c("central"))
+  
+  graf_df <- ggplot()+
+      geom_function(fun=df,xlim=c(i,d),color="firebrick",linewidth=1.2)+
+    geom_line(aes(x,df_h05),color="tomato2",linetype="dashed")+
+    geom_line(aes(x,df_h01),color="gold",linetype="dashed")+
+    geom_line(aes(x,df_h0),color="green",linetype="dashed")+
+    labs(y="Derivadas")+
+      theme_bw()
+  ggplotly(graf_df)
+}
+```
+
+```{r}
+graf3<-function(f){
+  error_derivada <- abs(df(x)-df_h0)
+  graf_error <- ggplot()+
+    geom_point(aes(x,error_derivada),color="deeppink",alpha=0.5)+
+    theme_bw()
+  graf_error
+}
+```
 
 a) $f(x)=e^{2x}-cos (2x)$, $x\in [0,2]$
+```{r}
+f <- function(x){exp(2*x)-cos(2*x)}
+df<-function(x) {2*exp(2*x) + 2*sin(2*x)}
+i=0
+d=2
+graf1(f,i,d)
+graf2(f,i,d,df)
+graf3(f)
+```
 
 b) $f(x)=log(x+2)-(x+1)^2$, $x\in [0,5]$
 ```{r}
-f <- function(x){
-  log(x+2)-(x+1)^2
-}
-graf_f <- ggplot()+
-  geom_function(fun=f,xlim=c(-.1,5+.1),color="dodgerblue",linewidth=.8)+
-  theme_bw()
-graf_f
-```
-```{r}
-df <- function(x){
-  1/(x+2)-2*(x+1)
-}
-
-x <- seq(0,5,length.out=100)
-
-df_h05 <- fderiv(f,x,n=1,h=0.5,method=c("central"))
-df_h01 <- fderiv(f,x,n=1,h=0.1,method=c("central"))
-df_h0 <- fderiv(f,x,n=1,h=0,method=c("central"))
-
-graf_df <- ggplot()+
-    geom_function(fun=df,xlim=c(0,5),color="firebrick",linewidth=1.2)+
-  geom_line(aes(x,df_h05),color="tomato2",linetype="dashed")+
-  geom_line(aes(x,df_h01),color="gold",linetype="dashed")+
-  geom_line(aes(x,df_h0),color="green",linetype="dashed")+
-  labs(y="Derivadas")+
-    theme_bw()
-ggplotly(graf_df)
-```
-```{r}
-error_derivada <- abs(df(x)-df_h0)
-graf_error <- ggplot()+
-  geom_point(aes(x,error_derivada),color="deeppink",alpha=0.5)+
-  theme_bw()
-graf_error
+f <- function(x){log(x+2)-(x+1)^2}
+df <- function(x) 1/(x+2) - 2*(x+1)
+graf1(f,0,5)
+graf2(f,0,5,df)
+graf3(f)
 ```
 
 c) $f(x)=x\, sen\,x+x^2cos\,x$, $x\in [0,\pi]$
+```{r}
+f <- function(x){x*sin(x)+x^2*cos(x)}
+df <- function(x) sin(x) + x*cos(x) + 2*x*cos(x) - x^2*sin(x)
+i=0
+d=pi
+graf1(f,i,d)
+graf2(f,i,d,df)
+graf3(f)
+```
 
 d) $f(x)=(cos\,3x)^2-e^{2x}$, $x\in [0,\pi/2]$
 
 ```{r}
-f <- function(x){
-  (cos(3*x))^2-exp(2*x)
-}
-graf_f <- ggplot()+
-  geom_function(fun=f,xlim=c(-.1,pi/2+.1),color="dodgerblue",linewidth=.8)+
-  theme_bw()
-graf_f
+f <- function(x){(cos(3*x))^2-exp(2*x)}
+df <- function(x) -6*cos(3*x)*sin(3*x) - 2*exp(2*x)
+i=0
+d=pi/2
+graf1(f,i,d)
+graf2(f,i,d,df)
+graf3(f)
 ```
-```{r}
-df <- function(x){
-  -6*cos(3*x)*sin(3*x)-2*exp(2*x)
-}
 
-x <- seq(0,pi/2,length.out=100)
-
-df_h05 <- fderiv(f,x,n=1,h=0.5,method=c("central"))
-df_h01 <- fderiv(f,x,n=1,h=0.1,method=c("central"))
-df_h0 <- fderiv(f,x,n=1,h=0,method=c("central"))
-
-graf_df <- ggplot()+
-    geom_function(fun=df,xlim=c(0,pi/2),color="firebrick",linewidth=1.2)+
-  geom_line(aes(x,df_h05),color="tomato2",linetype="dashed")+
-  geom_line(aes(x,df_h01),color="gold",linetype="dashed")+
-  geom_line(aes(x,df_h0),color="green",linetype="dashed")+
-  labs(y="Derivadas")+
-    theme_bw()
-ggplotly(graf_df)
-```
 ```{r}
 error_derivada <- abs(df(x)-df_h0)
 graf_error <- ggplot()+
@@ -119,8 +126,26 @@ graf_error
 
 
 e) $f(x)=x\,cos\,x-x^2sen\,x$, $x\in [0, 2\pi]$
+```{r}
+f <- function(x){x*cos(x)-x^2*sin(x)}
+df <- function(x) cos(x) - x*sin(x) - 2*x*sin(x) - x^2*cos(x)
+i=0
+d=2*pi
+graf1(f,i,d)
+graf2(f,i,d,df)
+graf3(f)
+```
 
 f) $f(x)=2(log\,x)^2+3\,sen\,x$, $x\in[1,5]$
+```{r}
+f <- function(x){2*log(x)^2+3*sin(x)}
+df <- function(x) 4*log(x)/x + 3*cos(x)
+i=1
+d=5
+graf1(f,i,d)
+graf2(f,i,d,df)
+graf3(f)
+```
 
 
 # Ejercicio 2 
@@ -133,6 +158,15 @@ a)
 \int_{0.5}^1 x^4 dx
 \end{equation}
 
+```{r}
+f<-function(x){x^4}
+x<-seq(.5,1,length.out=100)
+graf_f <- ggplot()+
+    geom_function(fun=f,xlim=c(.5,1),color="dodgerblue",linewidth=.8)+
+    geom_area(aes(x,f(x)),fill="gold4",alpha=0.5)+
+    theme_bw()
+  graf_f
+```
 
 
 b) 
