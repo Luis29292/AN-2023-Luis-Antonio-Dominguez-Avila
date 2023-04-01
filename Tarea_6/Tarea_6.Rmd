@@ -152,6 +152,26 @@ graf3(f)
 
 Da el valor aproximado (por medio de las funciones `integral` y `cotes`, del package `pracma`) y exacto (en caso de ser posible) de las siguientes integrales (realiza la respectiva gráfica).
 
+```{r}
+graf4<-function(f,i,d){
+  x<-seq(i,d,length.out=100)
+  graf_f <- ggplot()+
+      geom_function(fun=f,xlim=c(i,d),color="dodgerblue",linewidth=.8)+
+      geom_area(aes(x,f(x)),fill="gold4",alpha=0.5)+
+      theme_bw()
+  graf_f
+}
+```
+```{r}
+integrador<-function(f,i,d){
+  for(nodos in 2:8){
+    integral_aprox<-cotes(f,i,d,n=10,nodes=nodos)
+    cat("La aproximación de la integral con ",nodos," nodos es:",integral_aprox,"\n")
+  }
+}
+```
+
+
 a) 
 
 \begin{equation}
@@ -160,12 +180,8 @@ a)
 
 ```{r}
 f<-function(x){x^4}
-x<-seq(.5,1,length.out=100)
-graf_f <- ggplot()+
-    geom_function(fun=f,xlim=c(.5,1),color="dodgerblue",linewidth=.8)+
-    geom_area(aes(x,f(x)),fill="gold4",alpha=0.5)+
-    theme_bw()
-  graf_f
+graf4(f,.5,1)
+integrador(f,.5,1)
 ```
 
 
@@ -174,6 +190,14 @@ b)
 \begin{equation}
 \int_{0}^{0.5} \frac{2}{x-4} dx
 \end{equation}
+```{r}
+f<-function(x){2/(x-4)}
+i=0
+d=.5
+graf4(f,i,d)
+integrador(f,i,d)
+```
+
 
 
 c) 
@@ -181,6 +205,13 @@ c)
 \begin{equation}
 \int_{1}^{1.5} x^2\, log(x) dx
 \end{equation}
+```{r}
+f<-function(x){x^2*log(x)}
+i=1
+d=1.5
+graf4(f,i,d)
+integrador(f,i,d)
+```
 
 
 d) 
@@ -188,22 +219,50 @@ d)
 \begin{equation}
 \int_{0}^{1} x^2 e^{-x}\,dx
 \end{equation}
+```{r}
+f<-function(x){x^2*exp(-x)}
+i=0
+d=1
+graf4(f,i,d)
+integrador(f,i,d)
+```
 
 e)
 
 \begin{equation}
 \int_{1}^{1.6} \frac{2x}{x^2-4} dx
 \end{equation}
+```{r}
+f<-function(x){2*x/(x^2-4)}
+i=1
+d=1.6
+graf4(f,i,d)
+integrador(f,i,d)
+```
 
 f)
 
 \begin{equation}
 \int_{0}^{\pi/4} e^{3x}sin(2x) dx
 \end{equation}
+```{r}
+f<-function(x){exp(3*x)*sin(2*x)}
+i=0
+d=pi/4
+graf4(f,i,d)
+integrador(f,i,d)
+```
 
 g)
 
 \begin{equation}
 \int_{0}^{\pi/2} ((sen\,x)^2-2x\,sen\,x+1) dx
 \end{equation}
+```{r}
+f<-function(x){(sin(x))^2-2*x*sin(x)+1}
+i=0
+d=pi/2
+graf4(f,i,d)
+integrador(f,i,d)
+```
 
