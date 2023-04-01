@@ -362,6 +362,49 @@ cubi(f,f_expr,0,2*pi)
 
 Dada la partición $x_0=0, x_1=0.5, x_2=1$, del intervalo $[0,1]$, encuentra el spline cúbico $S$ para $f(x)=e^{2x}$.  Aproxima $\int_0^{1} e^{2x}\,dx$ con  $\int_0^{1} S(x)\,dx$ y compara el resultado con el valor real.
 
+```{r}
+f <- function(x){exp(2*x)}
+f_expr<-expr(exp(2*x))
+x_graf<-seq(0,1,length.out=100)
+y_graf<-f(x_graf)
+
+der<-D(f_expr,"x")
+d<-c()
+x<-0
+d[1]=eval(der)
+x<-1
+d[2]=eval(der)
+
+int_f<-integrate(f,0,1)
+
+x_n <- seq(0, 1, length.out = 3)
+f_n <- f(x_n)
+
+cubicspline(x_n, f_n, endp2nd = TRUE, der = c(d[1], d[2]))
+
+x_cs <- seq(0, 1, length.out = 100)
+y_cs <- cubicspline(x_n, f_n, x_cs)
+y_cscond <- cubicspline(x_n, f_n, x_cs, endp2nd = TRUE, der = c(d[1], d[2]))
+# graf_f<-ggplot()+
+#   geom_function(fun=f,color="deeppink3",linewidth=1.1)+
+#   geom_point(aes(resultados$x_3,resultados$f_3),size=2,color="blue3")+
+#   geom_line(aes(resultados$x_cs3,resultados$y_cs3),linewidth=.8,linetype="dashed",color="dodgerblue")+
+#   geom_line(aes(resultados$x_cs3,resultados$y_cscond3),linewidth=.8,linetype="dashed",color="dodgerblue3")+
+#   xlim(l,r)+
+#   theme_minimal()
+# ggplotly(graf_f)
+
+graf_5<-ggplot()+
+  geom_function(fun=f,color="green")+
+  geom_area(aes(x_graf,y_graf),fill="olivedrab3",alpha=0.5)+
+  geom_point(aes(x_n,f_n),size=2,color="red")+
+  geom_line(aes(x_cs,y_cs),linewidth=0.8,color="firebrick3",linetype="dashed")+
+  geom_line(aes(x_cs,y_cscond),linewidth=0.8,color="firebrick2",linetype="dashed")+
+  xlim(-.1,1.1)+
+  theme_light()
+ggplotly(graf_5)
+int_f
+```
 
 
 
