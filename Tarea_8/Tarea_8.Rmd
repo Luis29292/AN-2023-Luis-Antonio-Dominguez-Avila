@@ -1,0 +1,147 @@
+---
+title: "Tarea 8. Regresión Lineal."
+author: "Análisis Numérico. Luis Antonio Domínguez Ávila"
+date: "Mayo 2023"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    theme: cerulean
+---
+
+
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(knitr)
+library(tidyverse)
+library(pracma)
+library(plotly)
+library(MASS)
+library(ISLR2)
+library(car)
+library(corrplot)
+library(rgl)
+knitr::knit_hooks$set(webgl = hook_webgl)
+```
+
+
+
+# Conjunto de datos
+
+Elegir un conjunto de datos de la lista que se muestra al ejecutar el siguiente chunk (previamente debes cargar los packages que están en el chunk anterior)
+
+```{r}
+data()
+```
+
+```{r echo=TRUE}
+data("Anscombe")
+head(Anscombe)
+```
+
+# Resumen estadístico
+
+```{r}
+summary(Anscombe )
+```
+
+
+# Matriz de diagramas
+```{r}
+scatterplotMatrix(~ education+income+young+urban,regLine=TRUE,smooth=FALSE,diagonal=list(method="histogram"),data=Anscombe )
+```
+
+
+# Distribución de variables (histogramas) {.tabset}
+
+## education
+```{r}
+ggplot(Anscombe )+
+  geom_histogram(aes(education),color="black",fill="red3",bins=10)+
+  theme_bw()
+```
+
+## income
+```{r}
+ggplot(Anscombe )+
+  geom_histogram(aes(income),color="black",fill="red3",bins=10)+
+  theme_bw()
+```
+
+## young
+```{r}
+ggplot(Anscombe )+
+  geom_histogram(aes(young),color="black",fill="red3",bins=10)+
+  theme_bw()
+```
+
+## urban
+```{r}
+ggplot(Anscombe )+
+  geom_histogram(aes(urban),color="black",fill="red3",bins=10)+
+  theme_bw()
+```
+
+# Diagramas de dispersión (scatterplots) {.tabset}
+
+## education vs income
+```{r warning=FALSE,message=FALSE}
+ggplot(Anscombe )+
+  geom_point(aes(income,education),color="blue3",size=1.5)+
+  geom_smooth(aes(income,education),method="lm",se=FALSE)+
+  theme_bw()
+```
+
+## education vs urban
+```{r warning=FALSE,message=FALSE}
+ggplot(Anscombe )+
+  geom_point(aes(urban, education),color="blue3",size=1.5)+
+  geom_smooth(aes(urban, education),method="lm",se=FALSE)+
+  theme_bw()
+```
+
+# Matriz de correlación
+```{r}
+mat_cor <- cor(dplyr::select(Anscombe,where(is.numeric)))
+corrplot(mat_cor,method="color")
+```
+
+
+# Regresión lineal simple {.tabset}
+
+## urban ~ income
+```{r}
+ur_in_lm <- lm(urban ~ income,data=Anscombe)
+summary(ur_in_lm)
+```
+
+## urban ~ education
+```{r}
+ur_ed_lm <- lm(urban ~ education,data=Anscombe)
+summary(ur_ed_lm)
+```
+ 
+# Regresión lineal múltiple {.tabset}
+
+## urban ~ income + education
+```{r webgl=TRUE, warning=FALSE}
+scatter3d(urban ~ income + education,data=Anscombe,fit="linear",residual=TRUE,bg="white",axis.scale=TRUE)
+```
+
+```{r}
+ur_ined_lm <- lm(urban ~ income + education, data=Anscombe)
+summary(ur_ined_lm)
+```
+
+
+
