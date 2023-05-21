@@ -36,19 +36,9 @@ Aproxima la solución de los siguientes problemas con valores iniciales con los 
 
 ```{r}
 graf <- function(dy,a,b,y0,sol_exacta=NULL){
-#   dy <- function(t,y){
-#   cos(2*t)+sin(3*t)
-# }
-# a <- 0
-# b <- 1
-# y0 <-1
-
 sol_euler<-euler_heun(dy,a,b,y0,n=100)
 sol_rk<-rk4(dy,a,b,y0,n=100)
 sol_ode<-ode45(dy,a,b,y0,hmax=0.05)
-# sol_exacta<-function(t){
-#   0.5*sin(2*t)-1/3*cos(3*t)+4/3
-# }
 grafica <- ggplot()
 if (!is.null(sol_exacta)){
   grafica <- grafica +
@@ -63,6 +53,25 @@ ggplotly(grafica)
 }
 ```
 
+```{r}
+grafS<- function(dy,a,b,y0,sol_y1,sol_y2,sol_y3=NULL){
+  sol_rk <- rk4sys(dy,a,b,y0,n=100)
+  grafica <- ggplot()+
+    geom_function(fun=sol_y1,xlim=c(a,b),linewidth=1.25,color="deepskyblue")+
+    geom_function(fun=sol_y2,xlim=c(a,b),linewidth=1.25,color="deepskyblue2")+
+    
+    geom_line(aes(sol_rk$x,sol_rk$y[,1]),color="#ABC111")+
+    geom_line(aes(sol_rk$x,sol_rk$y[,2]),color="#DDD222")+
+    
+    theme_bw()
+  if (!is.null(sol_y3)){
+    grafica <- grafica +
+      geom_function(fun=sol_y3,xlim=c(a,b),linewidth=1.25,color="deepskyblue3")+
+      geom_line(aes(sol_rk$x,sol_rk$y[,3]),color="red")
+  }
+  ggplotly(grafica)
+}
+```
 
 1. $y'=1+(t-y)^2$, $2\leq t \leq 3$, $y(2)=1$.  Solución exacta $y(t)=t+1/(1-t)$
 ```{r}
@@ -191,7 +200,21 @@ y_3(t)&=-sen\,t+cos\,t
 \end{aligned}
 \end{equation}
 
-
+```{r}
+dy <- function(t,y){
+  y1 <- y[2]
+  y2 <- -y[1]-2*exp(t)+1
+  y3 <- -y[1]-exp(t)+1
+  return(c(y1,y2,y3))
+}
+a <- 0
+b <- 2
+y0 <- c(1,0,1)
+sol_y1<-function(t){cos(t)+ sin(t)-exp(t)+1}
+sol_y2<-function(t){-sin(t)+cos(t)-exp(t)}
+sol_y3<-function(t){-sin(t)+cos(t)}
+grafS(dy,a,b,y0,sol_y1,sol_y2,sol_y3)
+```
 8. 
 
 \begin{equation}
@@ -210,6 +233,19 @@ y_1(t)&=\frac{1}{3}e^{5t}-\frac{1}{3}e^{-t}+e^{2t}\\
 y_2(t)&=\frac{1}{3}e^{5t}+\frac{2}{3}e^{-t}+t^2e^{2t}
 \end{aligned}
 \end{equation}
+```{r}
+dy <- function(t,y){
+  y1 <- 3*y[1]+2*y[2]-(2*t^2+1)*exp(2*t)
+  y2 <- 4*y[1]+y[2]+(t^2+2*t-4)*exp(2*t)
+  return(c(y1,y2))
+}
+a <- 0
+b <- 1
+y0 <- c(1,1)
+sol_y1<-function(t){1/3*exp(5*t)-1/3*exp(-t)+exp(2*t)}
+sol_y2<-function(t){1/3*exp(5*t)+2/3*exp(-t)+t^2*exp(2*t)}
+grafS(dy,a,b,y0,sol_y1,sol_y2)
+```
 
 9. 
 
@@ -242,7 +278,19 @@ dy <- function(t,y){
 a <- 0
 b <- 1
 y0 <- c(1,1,-1)
-sol_rk <- rk4sys(dy,a,b,y0,n=100)
+sol_y1<-function(t){-0.05*t^5+0.25*t^4+t+2-exp(-t)}
+sol_y2<-function(t){t^3+1}
+sol_y3<-function(t){0.25*t^4+t-exp(-t)}
+grafS(dy,a,b,y0,sol_y1,sol_y2,sol_y3)
+```
+```{r}
+dy <- function(t,y){
+  as.matrix(c(y[2]-y[3]+t,3*t^2,y[2]+exp(-t)))
+}
+a <- 0
+b <- 1
+y0 <- as.matrix(c(1,1,-1))
+sol_ode <- ode45(dy,a,b,y0,hmax = 0.05)
 sol_y1<-function(t){-0.05*t^5+0.25*t^4+t+2-exp(-t)}
 sol_y2<-function(t){t^3+1}
 sol_y3<-function(t){0.25*t^4+t-exp(-t)}
@@ -250,13 +298,12 @@ grafica <- ggplot()+
   geom_function(fun=sol_y1,xlim=c(a,b),linewidth=1.25,color="deepskyblue")+
   geom_function(fun=sol_y2,xlim=c(a,b),linewidth=1.25,color="deepskyblue2")+
   geom_function(fun=sol_y3,xlim=c(a,b),linewidth=1.25,color="deepskyblue3")+
-  geom_line(aes(sol_rk$x,sol_rk$y[,1]),color="#ABC111")+
-  geom_line(aes(sol_rk$x,sol_rk$y[,2]),color="#DDD222")+
-  geom_line(aes(sol_rk$x,sol_rk$y[,3]),color="red")+
+  geom_line(aes(sol_ode$t,sol_ode$y[,1]),color="#ABC111")+
+  geom_line(aes(sol_ode$t,sol_ode$y[,2]),color="#DDD222")+
+  geom_line(aes(sol_ode$t,sol_ode$y[,3]),color="red")+
   theme_bw()
 ggplotly(grafica)
 ```
-
 10. 
 
 \begin{equation}
@@ -278,6 +325,21 @@ y_3(t)&=2e^{4t}-4e^{3t}-e^{-2t}-2
 \end{aligned}
 \end{equation}
 
+```{r}
+dy <- function(t,y){
+  y1 <- 3*y[1]+2*y[2]-y[3]-1-3*t-2*sin(t)
+  y2 <- y[1]-2*y[2]+3*y[3]+6-t+2*sin(t)+cos(t)
+  y3 <-2*y[1]+4*y[3]+8-2*t
+  return(c(y1,y2,y3))
+}
+a <- 0
+b <- 2
+y0 <- c(5,-9,-5)
+sol_y1<-function(t){2*exp(3*t)+3*exp(-2*t)+t}
+sol_y2<-function(t){-8*exp(-2*t)+exp(4*t)-2*exp(3*t)+sin(t)}
+sol_y3<-function(t){2*exp(4*t)-4*exp(3*t)-exp(-2*t)-2}
+grafS(dy,a,b,y0,sol_y1,sol_y2,sol_y3)
+```
 
 11. $y''-2y'+y=t\,e^t-t$, $0\leq t\leq 1$, $y(0)=y'(0)=0$.
 
@@ -286,6 +348,31 @@ Solución exacta:
 \begin{equation}
 y(t)=\frac{1}{6}t^3e^t-te^t+2e^t-t-2.
 \end{equation}
+```{r}
+dy <- function(t,u){
+  u1 <- u[2]
+  u2 <- t*exp(t)+2*u[2]+u[1]
+  return(c(u1,u2))
+}
+
+a <-0
+b <- 1
+y0 <- c(0,0)
+
+sol_rk <- rk4sys(dy,a,b,y0,n=100)
+sol_exacta <-function(t){
+  (1/6)*t^3*exp(t)-t*exp(t)+2*exp(t)-t-2
+}
+grafica <- ggplot()+
+geom_function(fun=sol_exacta,xlim=c(a,b),linewidth=1.25, color="yellow2")+
+
+geom_line(aes(sol_rk$x,sol_rk$y[ ,1]),color="violetred")+
+geom_line(aes(sol_rk$x,sol_rk$y[ ,2]),color="springgreen1")+
+
+theme_bw()
+ggplotly(grafica)
+
+```
 
 12. $y'''+2y''-y'-2y=e^t$, $0\leq t\leq 3$, $y(0)=1$, $y'(0)=2$, $y''(0)=0$. 
 
@@ -294,5 +381,59 @@ Solución exacta:
 \begin{equation}
 y(t)=\frac{43}{36}e^t+\frac{1}{4}e^{-t}-\frac{4}{9}e^{-2t}+\frac{1}{6}te^t.
 \end{equation}
+```{r}
+dy <- function(t,u){
+  u1 <- u[2]
+  u2 <- u[3]
+  u3 <- exp(t)-2*u[3]+u[2]+2*u[1]
+  return(c(u1,u2,u3))
+}
+
+a <-0
+b <- 3
+y0 <- c(1,2,0)
+
+sol_rk <- rk4sys(dy,a,b,y0,n=100)
+sol_exacta <-function(t){
+  (43/36)*exp(t)+(1/4)*exp(-t)-(4/9)*exp(-2*t)+(1/6)*t*exp(t)
+}
+grafica <- ggplot()+
+geom_function(fun=sol_exacta,xlim=c(a,b),linewidth=1.25, color="yellow2")+
+#geom_function(fun=sol_y1,xlim=c(a,b),linewidth=1.25, color="yellow2")+
+#geom_function(fun=sol_y1,xlim=c(a,b),linewidth=1.25, color="yellow2")+
+
+geom_line(aes(sol_rk$x,sol_rk$y[ ,1]),color="violetred")+
+geom_line(aes(sol_rk$x,sol_rk$y[ ,2]),color="springgreen1")+
+geom_line(aes(sol_rk$x,sol_rk$y[ ,3]),color="coral")+
+theme_bw()
+ggplotly(grafica)
+
+```
 
 13. $t^3y'''+t^2y''-2ty'+2y=8t^3-2$, $1\leq t\leq 2$, $y(1)=2$, $y'(1)=8$, $y''(1)=6$.  Solución exacta: $y(t)=2t-t^{-1}+t^2+t^3-1$.
+```{r}
+dy <- function(t,u){
+  u1 <- u[2]
+  u2 <- u[3]
+  u3 <- (1/t^3)*(8*t^3-2-t^2*u[3]+2*t*u[2]-2*u[1])
+  return(c(u1,u2,u3))
+}
+
+a <- 1
+b <- 10
+y0 <- c(2,6,8)
+
+sol_rk <- rk4sys(dy,a,b,y0,n=100)
+sol_exacta <-function(t){
+  2*t-t^(-1)+t^2+t^3-1
+}
+grafica <- ggplot()+
+geom_function(fun=sol_exacta,xlim=c(a,b),linewidth=1.25, color="yellow2")+
+
+geom_line(aes(sol_rk$x,sol_rk$y[ , 1]),color="violetred", linetype="dashed")+
+geom_line(aes(sol_rk$x,sol_rk$y[ , 2]),color="springgreen1", linetype="dashed")+
+geom_line(aes(sol_rk$x,sol_rk$y[ , 3]),color="coral", linetype="dashed")+
+theme_bw()
+ggplotly(grafica)
+
+```
